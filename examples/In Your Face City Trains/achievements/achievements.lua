@@ -7,28 +7,34 @@ function AchievementSystem.New()
 	local achsys = {}
 	setmetatable(achsys, AchievementSystem)
 
+	achsys.achievementData = {}
+
+
+
 	achsys.fileLocation = "achievements.txt"
-	achsys.isDrawing = false
+
+	achsys.topColor = {r=0, g=100, b=200}
+	achsys.backgroundColor = {r=22, g=22, b=22}
+
 	achsys.speed = 5
-	achsys.xDirection = 1
 	achsys.waitTime = 200
+
 	achsys.imageSize = 60
 	achsys.descriptionWidth = 150
 	achsys.paddingSize = 5
 	achsys.topSize = 2
-	achsys.topColor = {r=0, g=100, b=200}
-	achsys.backgroundColor = {r=22, g=22, b=22}
-	achsys.timeWaited = achsys.waitTime
-	achsys.displayedName = "placeholder"
-	achsys.displayedDescription = "placeholder"
-	achsys.displayedImage = "placeholder"
+
+	achsys.popupWidth = (achsys.paddingSize * 3) + achsys.descriptionWidth + achsys.imageSize
+	
+	achsys.startXPos = love.graphics.getWidth()
+	achsys.waitXPos = love.graphics.getWidth() - achsys.popupWidth - 5
+
 	achsys.titleFont = love.graphics.newFont("achievements/res/Ubuntu-B.ttf", 15)
 	achsys.descriptionFont = love.graphics.newFont("achievements/res/Ubuntu-B.ttf", 12)
 	achsys.soundEffect = love.audio.newSource("achievements/res/SoundEffect.wav", "static")
-	achsys.achievementData = {}
-	achsys.popupWidth = (achsys.paddingSize * 3) + achsys.descriptionWidth + achsys.imageSize
-	achsys.startXPos = love.graphics.getWidth()
-	achsys.waitXPos = love.graphics.getWidth() - achsys.popupWidth - 5
+
+
+
 	AchievementSystemConfig(achsys)
 	achsys:LoadFromFile()
 
@@ -108,6 +114,19 @@ function AchievementSystem:Draw()
 			love.graphics.setFont(font)
 		end
 		love.graphics.setColor(r, g, b, a)
+	end
+
+	if love.keyboard.isDown("=") then
+		i = 0
+		for k, v in ipairs(self.achievementData) do
+			i = i + 15
+			if v.unlocked then
+				love.graphics.setColor(0, 255, 0, 255)
+			else
+				love.graphics.setColor(255, 0, 0, 255)
+			end
+			love.graphics.print(v.name .. " - " .. v.description, 10, i)
+		end
 	end
 end
 
