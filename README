@@ -22,9 +22,11 @@ achievementSystem:Draw()
 then edit achievements/config.lua to add some achievments, there are some examples in there already, you should probably remove them, they follow this syntax:
 achievementSystem:CreateAchievement(UniqueID, Title, Description, imagename)
 
-the imagename shoudl just be name.ext and refer to a file in achievements/img you should add your own images here
+the imagename should just be name.ext and refer to a file in achievements/img you should add your own images here
 
 to unlock an achievment you need to use
 achievementSystem:UnlockAchievement(UniqueID)
 
 in your code
+
+to view achievments ingame press and hold =
