@@ -1,7 +1,7 @@
 function AchievementSystemConfig(achievementSystem)
 
-	achievementSystem:CreateAchievement("tst1", "Click!", "You pressed the mouse, holy shit. My friend said he had a friend who could do that.", "smile.png")
-	achievementSystem:CreateAchievement("tst2", "SuperClicker", "Press spacebar.", "superclicker.png")
-	achievementSystem:CreateAchievement("tst3", "SuperClicker2", "Press p.", "superclicker.png")
+	achievementSystem:CreateAchievement("uniqueid1", "Title", "Description", "example1.jpg")
+	achievementSystem:CreateAchievement("uniqueid2", "Another Title", "I am a description too", "example2.jpg")
+	achievementSystem:CreateAchievement("uniqueid3", "This is a Title", "Get 1000 points or something like that", "example2.jpg")
 
 end
