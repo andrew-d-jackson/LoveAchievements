@@ -9,18 +9,26 @@ function AchievementSystem.New()
 
 	achsys.fileLocation = "achievements.txt"
 	achsys.isDrawing = false
-	achsys.minXPos = -200
-	achsys.xPos = achsys.minXPos
+	achsys.speed = 5
+	achsys.xDirection = 1
 	achsys.waitTime = 200
+	achsys.imageSize = 60
+	achsys.descriptionWidth = 150
+	achsys.paddingSize = 5
+	achsys.topSize = 2
+	achsys.topColor = {r=0, g=100, b=200}
+	achsys.backgroundColor = {r=22, g=22, b=22}
 	achsys.timeWaited = achsys.waitTime
-	achsys.displayedName = "name"
-	achsys.displayedDescription = "desctiption"
-	achsys.displayedImage = 0
-	achsys.waitTime = 200
+	achsys.displayedName = "placeholder"
+	achsys.displayedDescription = "placeholder"
+	achsys.displayedImage = "placeholder"
 	achsys.titleFont = love.graphics.newFont("achievements/res/Ubuntu-B.ttf", 15)
 	achsys.descriptionFont = love.graphics.newFont("achievements/res/Ubuntu-B.ttf", 12)
 	achsys.soundEffect = love.audio.newSource("achievements/res/SoundEffect.wav", "static")
 	achsys.achievementData = {}
+	achsys.popupWidth = (achsys.paddingSize * 3) + achsys.descriptionWidth + achsys.imageSize
+	achsys.startXPos = love.graphics.getWidth()
+	achsys.waitXPos = love.graphics.getWidth() - achsys.popupWidth - 5
 	AchievementSystemConfig(achsys)
 	achsys:LoadFromFile()
 
@@ -44,7 +52,7 @@ function AchievementSystem:UnlockAchievement(uniqueIDi)
 				self.displayedImage = v.image
 				love.audio.play(self.soundEffect)
 				self.isDrawing = true
-				self.xPos = self.minXPos
+				self.xPos = self.startXPos
 				self.timeWaited = self.waitTime
 
 			end
@@ -54,17 +62,21 @@ end
 
 function AchievementSystem:Update()
 	if self.isDrawing then
-		if self.timeWaited > 0 then
-			if self.xPos < 5 then
-				self.xPos = self.xPos + 10
-			else
-				self.timeWaited = self.timeWaited - 1
-			end
-		else
-			if self.xPos > self.minXPos then
-				self.xPos = self.xPos - 10
+		if self.timeWaited <= 0 then
+			if self.xPos < self.startXPos then
+				self.xPos = self.xPos + self.speed
+			elseif self.xPos > self.startXPos then
+				self.xPos = self.xPos - self.speed
 			else
 				self.isDrawing = false
+			end
+		else
+			if self.xPos < self.waitXPos then
+				self.xPos = self.xPos + self.speed
+			elseif self.xPos > self.waitXPos then
+				self.xPos = self.xPos - self.speed
+			else
+				self.timeWaited = self.timeWaited - 1
 			end
 		end
 	end
@@ -75,21 +87,21 @@ function AchievementSystem:Draw()
 		r, g, b, a = love.graphics.getColor()
 		font = love.graphics.getFont( )
 
-		love.graphics.setColor(0, 100, 255, 255)
-		love.graphics.rectangle("fill", self.xPos, 5, 200, 2)
+		love.graphics.setColor(self.topColor.r, self.topColor.g, self.topColor.b, 255)
+		love.graphics.rectangle("fill", self.xPos, self.paddingSize, self.popupWidth, self.topSize)
 
-		love.graphics.setColor(20, 20, 20, 255)
-		love.graphics.rectangle("fill", self.xPos, 7, 200, 100)
+		love.graphics.setColor(self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b, 255)
+		love.graphics.rectangle("fill", self.xPos, self.paddingSize + self.topSize, self.popupWidth, self.imageSize + (self.paddingSize * 2))
 
 		love.graphics.setColor(255, 255, 255, 255)
 
 		love.graphics.setFont(self.titleFont)
-		love.graphics.print(self.displayedName, self.xPos + 60, 10)
+		love.graphics.print(self.displayedName, self.xPos + self.imageSize + (self.paddingSize*2), self.paddingSize * 2)
 
 		love.graphics.setFont(self.descriptionFont)
-		love.graphics.printf(self.displayedDescription, self.xPos + 60, 30, 140)
+		love.graphics.printf(self.displayedDescription, self.xPos + self.imageSize + (self.paddingSize*2), 30, self.descriptionWidth)
 
-		love.graphics.draw(self.displayedImage, self.xPos + 5, 10)
+		love.graphics.draw(self.displayedImage, self.xPos + self.paddingSize, self.topSize + (self.paddingSize * 2), 0, self.imageSize / self.displayedImage:getWidth(), self.imageSize / self.displayedImage:getHeight())
 
 		love.graphics.setFont( font )
 		love.graphics.setColor(r, g, b, a)
@@ -126,5 +138,3 @@ function AchievementSystem:SaveToFile()
 	file:write(s)
 	file:close()
 end
-
-asys = AchievementSystem.New(1000)
