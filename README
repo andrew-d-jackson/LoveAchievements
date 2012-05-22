@@ -1,1 +1,30 @@
-Test
+Love Achievements
+
+Love Achievements is an achievements system for Love2d, it aims to be easy to intergrate into your games and lightweight.
+
+There is no licence, do what you want with it, but if you could credit me that would be great.
+
+To use copy the achievments directory into your love folder, so you have achievements.lua in achievements/achievements.lua
+
+then add the following to the top of your main.lua 
+require("achievements/achievements")
+
+then add this to the your love.load() method
+achievementSystem = AchievementSystem.New()
+
+
+then add this to the your love.update() method
+achievementSystem:Update()
+
+then add this to the your love.draw() method
+achievementSystem:Draw()
+
+then edit achievements/config.lua to add some achievments, there are some examples in there already, you should probably remove them, they follow this syntax:
+achievementSystem:CreateAchievement(UniqueID, Title, Description, imagename)
+
+the imagename shoudl just be name.ext and refer to a file in achievements/img you should add your own images here
+
+to unlock an achievment you need to use
+achievementSystem:UnlockAchievement(UniqueID)
+
+in your code
