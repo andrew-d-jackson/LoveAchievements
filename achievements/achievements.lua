@@ -13,7 +13,8 @@ function AchievementSystem.New()
 
 	achsys.fileLocation = "achievements.txt"
 
-	achsys.topColor = {r=0, g=100, b=200}
+	achsys.topUnlockedColor = {r=0, g=100, b=200}
+	achsys.topLockedColor = {r=255, g=0, b=0}
 	achsys.backgroundColor = {r=22, g=22, b=22}
 
 	achsys.speed = 5
@@ -25,6 +26,7 @@ function AchievementSystem.New()
 	achsys.topSize = 2
 
 	achsys.popupWidth = (achsys.paddingSize * 3) + achsys.descriptionWidth + achsys.imageSize
+	achsys.popupHeight = (achsys.paddingSize * 2) + achsys.topSize + achsys.imageSize
 	
 	achsys.startXPos = love.graphics.getWidth()
 	achsys.waitXPos = love.graphics.getWidth() - achsys.popupWidth - 5
@@ -88,44 +90,55 @@ function AchievementSystem:Update()
 	end
 end
 
+function AchievementSystem:DrawPopup(x, y, name, description, image, topColor)
+	love.graphics.setColor(topColor.r, topColor.g, topColor.b, 255)
+	love.graphics.rectangle("fill", x, y, self.popupWidth, self.topSize)
+
+	love.graphics.setColor(self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b, 255)
+	love.graphics.rectangle("fill", x, y + self.topSize, self.popupWidth, self.imageSize + (self.paddingSize * 2))
+
+	love.graphics.setColor(255, 255, 255, 255)
+
+	love.graphics.setFont(self.titleFont)
+	love.graphics.print(name, x + self.imageSize + (self.paddingSize*2), self.paddingSize + y)
+
+	love.graphics.setFont(self.descriptionFont)
+	love.graphics.printf(description, x + self.imageSize + (self.paddingSize*2), y + (self.paddingSize*2) + 15, self.descriptionWidth)
+
+	love.graphics.draw(image, x + self.paddingSize, y + self.topSize + self.paddingSize, 0, self.imageSize / image:getWidth(), self.imageSize / image:getHeight())
+		
+end
+
 function AchievementSystem:Draw()
 	if self.isDrawing then
 		r, g, b, a = love.graphics.getColor()
 		font = love.graphics.getFont()
 		
+		self:DrawPopup(self.xPos, 5, self.displayedName, self.displayedDescription, self.displayedImage, self.topUnlockedColor)
 
-		love.graphics.setColor(self.topColor.r, self.topColor.g, self.topColor.b, 255)
-		love.graphics.rectangle("fill", self.xPos, self.paddingSize, self.popupWidth, self.topSize)
-
-		love.graphics.setColor(self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b, 255)
-		love.graphics.rectangle("fill", self.xPos, self.paddingSize + self.topSize, self.popupWidth, self.imageSize + (self.paddingSize * 2))
-
-		love.graphics.setColor(255, 255, 255, 255)
-
-		love.graphics.setFont(self.titleFont)
-		love.graphics.print(self.displayedName, self.xPos + self.imageSize + (self.paddingSize*2), self.paddingSize * 2)
-
-		love.graphics.setFont(self.descriptionFont)
-		love.graphics.printf(self.displayedDescription, self.xPos + self.imageSize + (self.paddingSize*2), 30, self.descriptionWidth)
-
-		love.graphics.draw(self.displayedImage, self.xPos + self.paddingSize, self.topSize + (self.paddingSize * 2), 0, self.imageSize / self.displayedImage:getWidth(), self.imageSize / self.displayedImage:getHeight())
-		
 		if font then
 			love.graphics.setFont(font)
 		end
+
 		love.graphics.setColor(r, g, b, a)
 	end
 
 	if love.keyboard.isDown("=") then
-		i = 0
+		maxX = math.floor(love.graphics.getWidth() / self.popupWidth)
+		i = 1
 		for k, v in ipairs(self.achievementData) do
-			i = i + 15
+			x = ((i+1) % maxX) * self.popupWidth
+			y = math.floor(i/3) * self.popupHeight
+
 			if v.unlocked then
-				love.graphics.setColor(0, 255, 0, 255)
+				color = self.topUnlockedColor
 			else
-				love.graphics.setColor(255, 0, 0, 255)
+				color = self.topLockedColor
 			end
-			love.graphics.print(v.name .. " - " .. v.description, 10, i)
+
+			self:DrawPopup(x, y, v.name, v.description, v.image, color)
+
+			i = i + 1
 		end
 	end
 end
