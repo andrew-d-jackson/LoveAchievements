@@ -124,11 +124,11 @@ function AchievementSystem:Draw()
 	end
 
 	if love.keyboard.isDown("=") then
-		maxX = math.floor(love.graphics.getWidth() / self.popupWidth)
-		i = 1
+		maxX = math.floor(love.graphics.getWidth() / (self.popupWidth + 2)) + 1
+		i = 0
 		for k, v in ipairs(self.achievementData) do
-			x = ((i+1) % maxX) * self.popupWidth
-			y = math.floor(i/3) * self.popupHeight
+			x = ((i) % maxX) * (self.popupWidth + 2)
+			y = math.floor(i/maxX) * (self.popupHeight + 2)
 
 			if v.unlocked then
 				color = self.topUnlockedColor
