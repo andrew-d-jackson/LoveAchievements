@@ -36,9 +36,21 @@ function AchievementSystem.New()
 	achsys.soundEffect = love.audio.newSource("achievements/res/SoundEffect.wav", "static")
 
 
-
 	AchievementSystemConfig(achsys)
 	achsys:LoadFromFile()
+
+	achsys.maxPopupsHorizontal = math.floor(love.graphics.getWidth() / (achsys.popupWidth + 2))
+	achsys.totalPopupsVerticalSpace = math.floor((#achsys.achievementData)/achsys.maxPopupsHorizontal) * (achsys.popupHeight + 2) + 2
+	if achsys.totalPopupsVerticalSpace > love.graphics.getHeight() then
+		achsys.scrollUI = true
+		achsys.maxScrollOffset = achsys.totalPopupsVerticalSpace - love.graphics.getHeight()
+		achsys.scrollDirection = 1
+		achsys.maxScrollWaitTime = 150
+		achsys.scrollWaitTime = 0
+	else
+		achsys.scrollUI = false
+	end
+	achsys.scrollOffset = 0
 
 	return achsys
 end
@@ -88,6 +100,29 @@ function AchievementSystem:Update()
 			end
 		end
 	end
+
+	if love.keyboard.isDown("=") then
+		if self.scrollUI then
+			self.scrollOffset = self.scrollOffset + self.scrollDirection
+			if self.scrollOffset == 0 then
+				if self.scrollWaitTime == self.maxScrollWaitTime then
+					self.scrollDirection = 1
+					self.scrollWaitTime = 0
+				else
+					self.scrollDirection = 0
+					self.scrollWaitTime = self.scrollWaitTime + 1
+				end
+			elseif self.scrollOffset == self.maxScrollOffset then
+				if self.scrollWaitTime == self.maxScrollWaitTime then
+					self.scrollDirection = -1
+					self.scrollWaitTime = 0
+				else
+					self.scrollDirection = 0
+					self.scrollWaitTime = self.scrollWaitTime + 1
+				end
+			end
+		end
+	end
 end
 
 function AchievementSystem:DrawPopup(x, y, name, description, image, topColor)
@@ -124,11 +159,10 @@ function AchievementSystem:Draw()
 	end
 
 	if love.keyboard.isDown("=") then
-		maxX = math.floor(love.graphics.getWidth() / (self.popupWidth + 2))
 		i = 0
 		for k, v in ipairs(self.achievementData) do
-			x = ((i) % maxX) * (self.popupWidth + 2) + 2
-			y = math.floor(i/maxX) * (self.popupHeight + 2) + 2
+			x = ((i) % self.maxPopupsHorizontal) * (self.popupWidth + 2) + 2
+			y = math.floor(i/self.maxPopupsHorizontal) * (self.popupHeight + 2) + 2
 
 			if v.unlocked then
 				color = self.topUnlockedColor
@@ -136,7 +170,7 @@ function AchievementSystem:Draw()
 				color = self.topLockedColor
 			end
 
-			self:DrawPopup(x, y, v.name, v.description, v.image, color)
+			self:DrawPopup(x, y - self.scrollOffset, v.name, v.description, v.image, color)
 
 			i = i + 1
 		end
