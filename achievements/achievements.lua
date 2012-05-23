@@ -41,6 +41,8 @@ function AchievementSystem.New()
 	achsys.introTitle = "Love Achievements"
 	achsys.introDesc = "This Game Has Achievements. Press And Hold = To View"
 
+	achsys.lockImage = love.graphics.newImage("achievements/res/lock.png")
+
 	AchievementSystemConfig(achsys)
 	achsys:LoadFromFile()
 
@@ -143,7 +145,9 @@ function AchievementSystem:Update()
 	end
 end
 
-function AchievementSystem:DrawPopup(x, y, name, description, image, topColor)
+function AchievementSystem:DrawPopup(x, y, name, description, image, topColor, drawLocks)
+	drawLocks = drawLocks or false
+
 	love.graphics.setColor(topColor.r, topColor.g, topColor.b, 255)
 	love.graphics.rectangle("fill", x, y, self.popupWidth, self.topSize)
 
@@ -159,6 +163,9 @@ function AchievementSystem:DrawPopup(x, y, name, description, image, topColor)
 	love.graphics.printf(description, x + self.imageSize + (self.paddingSize*2), y + (self.paddingSize*2) + 15, self.descriptionWidth)
 
 	love.graphics.draw(image, x + self.paddingSize, y + self.topSize + self.paddingSize, 0, self.imageSize / image:getWidth(), self.imageSize / image:getHeight())
+	if drawLocks then
+		love.graphics.draw(self.lockImage, x + self.paddingSize, y + self.topSize + self.paddingSize, 0, self.imageSize / self.lockImage:getWidth(), self.imageSize / self.lockImage:getHeight())
+	end
 		
 end
 
@@ -188,7 +195,7 @@ function AchievementSystem:Draw()
 				color = self.topLockedColor
 			end
 
-			self:DrawPopup(x, y - self.scrollOffset, v.name, v.description, v.image, color)
+			self:DrawPopup(x, y - self.scrollOffset, v.name, v.description, v.image, color, not v.unlocked)
 
 			i = i + 1
 		end
