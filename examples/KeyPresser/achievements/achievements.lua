@@ -35,6 +35,11 @@ function AchievementSystem.New()
 	achsys.descriptionFont = love.graphics.newFont("achievements/res/Ubuntu-B.ttf", 12)
 	achsys.soundEffect = love.audio.newSource("achievements/res/SoundEffect.wav", "static")
 
+	achsys.displayIntro = true
+	achsys.introDelayTime = 50
+	achsys.introLogo = love.graphics.newImage("achievements/res/logo.png")
+	achsys.introTitle = "Love Achievements"
+	achsys.introDesc = "This Game Has Achievements. Press And Hold = To View"
 
 	AchievementSystemConfig(achsys)
 	achsys:LoadFromFile()
@@ -121,6 +126,19 @@ function AchievementSystem:Update()
 					self.scrollWaitTime = self.scrollWaitTime + 1
 				end
 			end
+		end
+	end
+
+	if self.displayIntro then
+		self.introDelayTime = self.introDelayTime - 1
+		if self.introDelayTime == 0 then
+			self.displayedName = self.introTitle
+			self.displayedDescription = self.introDesc
+			self.displayedImage = self.introLogo
+			self.isDrawing = true
+			self.xPos = self.startXPos
+			self.timeWaited = self.waitTime
+			self.displayIntro = false
 		end
 	end
 end
