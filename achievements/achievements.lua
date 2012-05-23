@@ -58,6 +58,7 @@ function AchievementSystem.New()
 		achsys.scrollUI = false
 	end
 	achsys.scrollOffset = 0
+	achsys.UIOffset = (love.graphics.getWidth() - ((achsys.maxPopupsHorizontal * (achsys.popupWidth + 2))+2))/2
 
 	return achsys
 end
@@ -179,7 +180,6 @@ function AchievementSystem:Draw()
 		if font then
 			love.graphics.setFont(font)
 		end
-
 		love.graphics.setColor(r, g, b, a)
 	end
 
@@ -195,7 +195,7 @@ function AchievementSystem:Draw()
 				color = self.topLockedColor
 			end
 
-			self:DrawPopup(x, y - self.scrollOffset, v.name, v.description, v.image, color, not v.unlocked)
+			self:DrawPopup(x + self.UIOffset, y - self.scrollOffset, v.name, v.description, v.image, color, not v.unlocked)
 
 			i = i + 1
 		end
