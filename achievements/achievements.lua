@@ -232,3 +232,19 @@ function AchievementSystem:SaveToFile()
 	file:write(s)
 	file:close()
 end
+
+function AchievementSystem:DisableIntro()
+	self.displayIntro = false
+end
+
+function AchievementSystem:SetBackgroundColor(red, green, blue)
+	self.backgroundColor = {r=red, g=green, b=blue}
+end
+
+function AchievementSystem:SetUnlockedColor(red, green, blue)
+	self.topUnlockedColor = {r=red, g=green, b=blue}
+end
+
+function AchievementSystem:SetLockedColor(red, green, blue)
+	self.topLockedColor = {r=red, g=green, b=blue}
+end
