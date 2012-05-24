@@ -2,7 +2,7 @@ Love Achievements
 
 Love Achievements is an achievements system for Love2d, it aims to be easy to intergrate into your games and lightweight.
 
-There is no licence, do what you want with it, but if you could credit me that would be great.
+Licened under the zlib/libpng license, so no need to ask me for permission
 
 To use copy the achievments directory into your love folder, so you have achievements.lua in achievements/achievements.lua
 
