@@ -30,6 +30,8 @@ function AchievementSystem.New()
 	achsys.topLockedColor = {r=255, g=0, b=0}
 	achsys.backgroundColor = {r=22, g=22, b=22}
 
+	achsys.GUIbutton = "="
+
 	achsys.speed = 5
 	achsys.waitTime = 200
 
@@ -48,16 +50,16 @@ function AchievementSystem.New()
 	achsys.descriptionFont = love.graphics.newFont("achievements/res/Ubuntu-B.ttf", 12)
 	achsys.soundEffect = love.audio.newSource("achievements/res/SoundEffect.wav", "static")
 
-	achsys.displayIntro = true
-	achsys.introDelayTime = 50
-	achsys.introLogo = love.graphics.newImage("achievements/res/logo.png")
-	achsys.introTitle = "Love Achievements"
-	achsys.introDesc = "This Game Has Achievements. Press And Hold = To View"
-
 	achsys.lockImage = love.graphics.newImage("achievements/res/lock.png")
 
 	AchievementSystemConfig(achsys)
 	achsys:LoadFromFile()
+
+	achsys.displayIntro = true
+	achsys.introDelayTime = 50
+	achsys.introLogo = love.graphics.newImage("achievements/res/logo.png")
+	achsys.introTitle = "Love Achievements"
+	achsys.introDesc = "This Game Has Achievements. Press And Hold " .. achsys.GUIbutton .." To View"
 
 	achsys.maxPopupsHorizontal = math.floor(love.graphics.getWidth() / (achsys.popupWidth + 2))
 	achsys.totalPopupsVerticalSpace = math.floor((#achsys.achievementData)/achsys.maxPopupsHorizontal) * (achsys.popupHeight + 2) + 2
@@ -122,7 +124,7 @@ function AchievementSystem:Update()
 		end
 	end
 
-	if love.keyboard.isDown("=") then
+	if love.keyboard.isDown(self.GUIbutton) then
 		if self.scrollUI then
 			self.scrollOffset = self.scrollOffset + self.scrollDirection
 			if self.scrollOffset == 0 then
@@ -196,7 +198,7 @@ function AchievementSystem:Draw()
 		love.graphics.setColor(r, g, b, a)
 	end
 
-	if love.keyboard.isDown("=") then
+	if love.keyboard.isDown(self.GUIbutton) then
 		i = 0
 		for k, v in ipairs(self.achievementData) do
 			x = ((i) % self.maxPopupsHorizontal) * (self.popupWidth + 2) + 2
@@ -260,4 +262,8 @@ end
 
 function AchievementSystem:SetLockedColor(red, green, blue)
 	self.topLockedColor = {r=red, g=green, b=blue}
+end
+
+function AchievementSystem:SetButton(button)
+	self.GUIbutton = button
 end
