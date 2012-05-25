@@ -29,6 +29,7 @@ function AchievementSystem.New()
 	achsys.topUnlockedColor = {r=0, g=100, b=200}
 	achsys.topLockedColor = {r=255, g=0, b=0}
 	achsys.backgroundColor = {r=22, g=22, b=22}
+	achsys.textColor = {r=255, g=255, b=255}
 
 	achsys.GUIbutton = "="
 
@@ -170,7 +171,7 @@ function AchievementSystem:DrawPopup(x, y, name, description, image, topColor, d
 	love.graphics.setColor(self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b, 255)
 	love.graphics.rectangle("fill", x, y + self.topSize, self.popupWidth, self.imageSize + (self.paddingSize * 2))
 
-	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.setColor(self.textColor.r, self.textColor.g, self.textColor.b, 255)
 
 	love.graphics.setFont(self.titleFont)
 	love.graphics.print(name, x + self.imageSize + (self.paddingSize*2), self.paddingSize + y)
@@ -178,6 +179,8 @@ function AchievementSystem:DrawPopup(x, y, name, description, image, topColor, d
 	love.graphics.setFont(self.descriptionFont)
 	love.graphics.printf(description, x + self.imageSize + (self.paddingSize*2), y + (self.paddingSize*2) + 15, self.descriptionWidth)
 
+	love.graphics.setColor(255, 255, 255, 255)
+	
 	love.graphics.draw(image, x + self.paddingSize, y + self.topSize + self.paddingSize, 0, self.imageSize / image:getWidth(), self.imageSize / image:getHeight())
 	if drawLocks then
 		love.graphics.draw(self.lockImage, x + self.paddingSize, y + self.topSize + self.paddingSize, 0, self.imageSize / self.lockImage:getWidth(), self.imageSize / self.lockImage:getHeight())
@@ -262,6 +265,10 @@ end
 
 function AchievementSystem:SetLockedColor(red, green, blue)
 	self.topLockedColor = {r=red, g=green, b=blue}
+end
+
+function AchievementSystem:SetTextColor(red, green, blue)
+	self.textColor = {r=red, g=green, b=blue}
 end
 
 function AchievementSystem:SetButton(button)

@@ -8,6 +8,7 @@ function AchievementSystemConfig(achievementSystem)
 	--achievementSystem:SetBackgroundColor(0, 0, 0)
 	--achievementSystem:SetUnlockedColor(255, 255, 0)
 	--achievementSystem:SetLockedColor(0, 0, 0)
+	--achievementSystem:SetTextColor(0, 0, 0)
 	--achievementSystem:SetButton("0")
 
 end
